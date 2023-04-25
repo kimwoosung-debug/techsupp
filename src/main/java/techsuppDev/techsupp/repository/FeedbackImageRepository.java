@@ -24,8 +24,8 @@ public class FeedbackImageRepository {
                 feedbackImage.getOriginImgName() + "', '" +
                 feedbackImage.getImgUrl() + "', '" +
                 feedbackImage.getRepImg() + "', '" +
-                feedbackImage.getId() + "', '" +
-                feedbackImage.getFeedbackId() + "');";
+                feedbackImage.getFeedbackId() + "', '" +
+                feedbackImage.getId() + "');";
 
         System.out.println("insert image feedback: " + sql);
         Query nativeQuery = em.createNativeQuery(sql, FeedbackImage.class);

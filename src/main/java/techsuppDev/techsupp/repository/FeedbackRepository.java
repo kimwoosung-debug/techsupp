@@ -22,7 +22,7 @@ public class FeedbackRepository {
                 "feedback.id, img_url, feedback_status, feedback_text, product_id, score, user_name " +
                 "from feedback " +
                 "inner join feedback_image " +
-                "on feedback.id = feedback_image.feedback_id " +
+                "on feedback.id = feedback_image.id " +
                 "left outer join " +
                 "(select user_name, userid from user inner join feedback " +
                 "on feedback.user_id = user.userid) as emailvalue " +

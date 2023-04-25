@@ -13,12 +13,15 @@ async function feedbackSpecificProductList(api, status) {
             <div class="FeedbackPictureByUser">
             <img src="http://localhost:8080${api[i].imgUrl}" style="max-width:80%; min-height:100px;"/>
             </div>
-            <div class="FeedbackScore-FeedbackUser">
-              <h6>작성자:  ${api[i].userName}</h6>  
-              <h6 class="Score">score: ${api[i].score} </h6>
-            </div>
-            <div class="FeedbackText">
-              <h4>피드백 텍스트 : ${api[i].feedbackText}</h4>
+            <div>
+              <div class="FeedbackScore-FeedbackUser">
+                <h6>작성자:  ${api[i].userName} score: ${api[i].score}</h6>  
+                <h6 class="Score"> </h6>
+              </div>
+              <div class="FeedbackText">
+                <h4>피드백 텍스트 : </h4>
+                <h6>${api[i].feedbackText} </h6>
+              </div>
             </div>
           </article>
           `
@@ -27,14 +30,10 @@ async function feedbackSpecificProductList(api, status) {
         feedbackSpecificContainer.innerHTML += `
       <article class="FeedbackWritenByUser">
         <div class="FeedbackPictureByUser">
-        <img src="http://localhost:8080/file/default/fail.png" style="max-width:80%; min-height:100px;"/>
+        <img src="http://localhost:8080/file/default/nofeedback.png" style="max-width:80%; min-height:100px;"/>
         </div>
         <div class="FeedbackScore-FeedbackUser">
-          <h4>작성된 상품 후기가 없습니다.</h4>  
-          
-        </div>
-        <div class="FeedbackText">
-          <h4>후기를 작성해 주세요</h4>
+          <h4>작성된 상품 후기가 없습니다. 후기를 작성해 주세요</h4>  
         </div>
       </article>
       `
@@ -46,10 +45,7 @@ async function feedbackSpecificProductList(api, status) {
         <img src="http://localhost:8080/file/default/investfail.png" style="max-width:80%; min-height:100px;"/>
         </div>
         <div class="FeedbackScore-FeedbackUser">
-          <h4>투자에 실패한 상품 입니다</h4>  
-        </div>
-        <div class="FeedbackText">
-          <h4>투자에 실패한 상품은 후기 작성이 불가능합니다</h4>
+          <h1>투자에 실패한 상품 입니다</h1>  
         </div>
       </article>
       `

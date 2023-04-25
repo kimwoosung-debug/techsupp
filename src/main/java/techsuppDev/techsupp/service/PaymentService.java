@@ -55,7 +55,11 @@ public class PaymentService {
     }
 
     public ArrayList getFivePaymentNumber(ArrayList<Long> fiveProductNumber) {
-        return paymentRepository.getFivePaymentCount(fiveProductNumber);
+        try {
+            return paymentRepository.getFivePaymentCount(fiveProductNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList(); // 예외가 발생하면 빈 리스트를 반환
+        }
     }
-
 }

@@ -58,7 +58,7 @@ function addLinkToDom(api) {
 
 async function createProductList(api) {
   try {
-    if (api.length != undefined){
+    if (api.length != 0){
       productList.innerHTML = ``;
       for(let i = 0; i < api.length; i++) {
           productList.innerHTML += `

@@ -4,7 +4,7 @@
 
 function LinkToInvestingProduct(id , paylog) {
   if(paylog == "n") {
-   return alert("이미 투자한 상품 입니다.")
+   alert("이미 투자한 상품 입니다.")
   } else {
   const investingURL = `/invest/?num=${id}`
   window.location.href = investingURL;
@@ -26,10 +26,7 @@ function wish(wishId , id, productName) {
   .then(alertWishProductName(wishId , productName))
   .then(data => {createSingleProduct(id) });
   } else {
-    fetch(`http://localhost:8080/api/wish/post/?num=${+id}`)
-  .then(response => response.json())
-  .then(alertWishProductName(wishId , productName))
-  .then(data => {createSingleProduct(id) });
+    alert("로그인 후 추가 가능합니다")
   }
 }
 
