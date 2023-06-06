@@ -12,5 +12,8 @@ public class TechsuppApplication {
 		SpringApplication.run(TechsuppApplication.class, args);
 
 	}
+	
+
 
 }
+

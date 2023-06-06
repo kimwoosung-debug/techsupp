@@ -21,6 +21,8 @@ import techsuppDev.techsupp.repository.PaymentRepository;
 import techsuppDev.techsupp.repository.ProductImageRepository;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,21 +43,13 @@ public class AdminProductService {
         adminProductRepository.save(product);
 
         for (int i = 0, max = multipartFileList.size(); i < max; i++) {
-            Image image = null;
+            Image image = Image.builder()
+                    .product(product)
+                    .repImg(i == 0 ? "Y" : "N")
+                    .build();
 
-            if(productDTO.getProductImgDTOList().size() != 0){
-                image = Image.builder()
-                        .product(product)
-                        .repImg(i == 0 ? "Y" : "N")
-                        .id(productDTO.getProductImgDTOList().get(0).getId())
-                        .build();
-            } else{
-                image = Image.builder()
-                        .product(product)
-                        .repImg(i == 0 ? "Y" : "N")
-                        .build();
-            }
             productImageService.saveImg(image, multipartFileList.get(i));
+
         }
         return product.getId();
     };
@@ -63,6 +57,7 @@ public class AdminProductService {
     @Transactional(readOnly = true)
     public ProductDTO getProductDetail(Long id) {
         List<Image> imageList = productImageRepository.findByProductIdOrderByIdAsc(id);
+        System.out.println(imageList);
         List<ProductImgDTO> productImgDTOList = new ArrayList<>();
 
         for (Image image : imageList) {
@@ -86,10 +81,26 @@ public class AdminProductService {
         return new PageResultDTO<>(result, fn);
     };
 
-    public void delete(Long id) {
-        adminProductRepository.delete(adminProductRepository.findById(id).get());
+    public Long update(ProductDTO productDTO, List<MultipartFile> multipartFileList) throws Exception {
+        Product product = productDTO.dtoToEntity(productDTO);
+        adminProductRepository.save(product);
+
+        for (int i = 0, max = multipartFileList.size(); i < max; i++) {
+            Image image = Image.builder()
+                        .product(product)
+                        .repImg(i == 0 ? "Y" : "N")
+                        .id(productDTO.getProductImgDTOList().get(0).getId())
+                        .build();
+
+            productImageService.updateImg(image.getId(), multipartFileList.get(i));
+        }
+
+        return product.getId();
     }
 
+    public void remove(Long id) throws IOException {
+        adminProductRepository.delete(adminProductRepository.findById(id).get());
+    }
 
     // 소영 main page - random product
     public List<ProductDTO> getRandomProduct() {

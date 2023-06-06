@@ -81,38 +81,28 @@ public class AdminController {
     public String edit(@PathVariable("id") Long id, Model model) {
 
         ProductDTO productDTO = adminProductService.getProductDetail(id);
+        System.out.println(productDTO);
         model.addAttribute("productForm", productDTO);
 
 
         return "admin/Product/edit";
     }
-    @GetMapping("product/delete/{id}")
-    public String removeFile(@PathVariable("id") Long id) throws IOException {
-
-        ProductDTO productDTO = adminProductService.getProductDetail(id);
-
-        if (productDTO.getProductImgDTOList().size() != 0) {
-            Path currentPath = Paths.get("C:/Users/rladn/IdeaProjects/techsupp/src/main/resources/static/file/product/"
-                    + productDTO.getProductImgDTOList().get(0).getOriginImgName());
-            Files.delete(currentPath);
-            Long imgId = productDTO.getProductImgDTOList().get(0).getId();
-            productImageService.deleteImageData(imgId);
-        }
-
-        adminProductService.delete(id);
-
-        return "redirect:/admin/product/list";
-    }
-
     @PostMapping("product/edit/{id}")
     public String editPost(@ModelAttribute("productForm") ProductDTO productDTO,
-                           @RequestParam("productImgFile") List<MultipartFile> multipartFileList) {
-        try {
-            adminProductService.register(productDTO, multipartFileList);
+                           @RequestParam("productImgFile") List<MultipartFile> multipartFileList) throws Exception {
 
-        } catch (Exception e) {
-            return "admin/Product/edit";
-        }
+        adminProductService.update(productDTO, multipartFileList);
+
+        return "redirect:/admin/product/list";
+
+    }
+    @GetMapping("product/delete/{id}")
+    public String remove(@PathVariable("id") Long id) throws IOException {
+
+        ProductDTO productDTO = adminProductService.getProductDetail(id);
+        productImageService.deleteImg(productDTO);
+        adminProductService.remove(id);
+
         return "redirect:/admin/product/list";
     }
     @GetMapping("payment/list")
@@ -120,23 +110,5 @@ public class AdminController {
         model.addAttribute("result", adminProductService.paymentList(pageRequestDTO));
         return "admin/Payment/paymentlist";
     }
-
-//    @GetMapping("payment/list")
-//    public String paymentList(Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-//
-//        Page<AdminPaymentForm> list = adminProductService.paymentList(pageable);
-//
-//        int nowPage = list.getPageable().getPageNumber() + 1;
-//        int startPage = Math.max(nowPage - 4, 1);
-//        int endPage = Math.min(nowPage + 9, list.getTotalPages());
-//
-//        model.addAttribute("list", list);
-//        model.addAttribute("nowPage", nowPage);
-//        model.addAttribute("startPage", startPage);
-//        model.addAttribute("endPage", endPage);
-//
-//        return "admin/Payment/paymentlist";
-//    }
-
 
 }

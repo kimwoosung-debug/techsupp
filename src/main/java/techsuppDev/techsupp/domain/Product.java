@@ -3,6 +3,7 @@ package techsuppDev.techsupp.domain;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import techsuppDev.techsupp.DTO.ProductDTO;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -57,6 +58,14 @@ public class Product extends BaseEntity{
     private ProductStatus productStatus;
     @Column(name = "click_count", columnDefinition = "integer default 0", nullable = false)
     private int clickCount;
+
+    public void updateItem(ProductDTO productDTO) {
+        this.productName = productDTO.getProductName();
+        this.totalPrice = productDTO.getTotalPrice();
+        this.information = productDTO.getInformation();
+        this.investPrice = productDTO.getInvestPrice();
+        this.period = productDTO.getPeriod();
+    }
 
 
 

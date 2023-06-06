@@ -4,13 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.thymeleaf.util.StringUtils;
 import techsuppDev.techsupp.DTO.ProductDTO;
 import techsuppDev.techsupp.DTO.ProductImgDTO;
 import techsuppDev.techsupp.domain.Image;
 import techsuppDev.techsupp.repository.ProductImageRepository;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,39 +20,28 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 @Log
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductImageService {
 
-    private String imgLocation = "/Users/rladn/IdeaProjects/techsupp/src/main/resources/static/file/product";
+    @Value("${imgLocation}")
+    String imgLocation;
     private final ProductImageRepository productImageRepository;
+    private final FileService fileService;
 
-    public String uploadFile(String uploadPath, String originalFileName, byte[] fileData) throws Exception {
-//        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        String savedFileName = System.currentTimeMillis() + "_" + originalFileName;
-        String fileUploadFullUrl = uploadPath + "/" + savedFileName;
-
-        FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
-        fos.write(fileData);
-        fos.close();
-
-        return savedFileName;
-    }
-    public void deleteImageData(Long imgId) {
-        productImageRepository.delete(productImageRepository.findById(imgId).get());
-    }
-
-    @Transactional
     public void saveImg(Image image, MultipartFile multipartFile) throws Exception {
+
         String originImgName = multipartFile.getOriginalFilename();
         String imgName = "";
         String imgUrl = "";
 
         if (!StringUtils.isEmpty(originImgName)) {
-            imgName = uploadFile(imgLocation, originImgName, multipartFile.getBytes());
+            imgName = fileService.uploadFile(imgLocation, originImgName, multipartFile.getBytes());
             imgUrl = "/upload/product/" + imgName;
         }
 
@@ -59,6 +49,27 @@ public class ProductImageService {
         productImageRepository.save(image);
     }
 
+    public void updateImg(Long imgId, MultipartFile multipartFile) throws Exception {
+        if (!multipartFile.isEmpty()) {
+            Image image = productImageRepository.findById(imgId).orElseThrow(EntityNotFoundException::new);
 
+            if (!StringUtils.isEmpty(image.getImgName())) {
+                fileService.deleteFile(image.getOriginImgName());
+            }
 
+            String oriImgName = multipartFile.getOriginalFilename();
+            String imgName = fileService.uploadFile(imgLocation, oriImgName, multipartFile.getBytes());
+            String imgUrl = "/upload/product/" + imgName;
+            image.updateProductImg(oriImgName, imgName, imgUrl);
+        }
+    }
+
+    public void deleteImg(ProductDTO productDTO) throws IOException {
+
+        if (productDTO.getProductImgDTOList().size() != 0) {
+            fileService.deleteFile(productDTO.getProductImgDTOList().get(0).getOriginImgName());
+            Long imgId = productDTO.getProductImgDTOList().get(0).getId();
+            productImageRepository.delete(productImageRepository.findById(imgId).get());
+        }
+    }
 }
