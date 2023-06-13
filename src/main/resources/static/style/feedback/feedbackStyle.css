@@ -189,7 +189,7 @@ body > * {
 .FeedbackListName-FeedbackListInformation > * {
   display: flex;
   /* border-style: solid; */
-  flex-direction: row;
+  flex-direction: column;
   margin: 5px;
 }
 
@@ -265,7 +265,6 @@ body > * {
 
 .FeedbackScore-FeedbackUser {
   display: flex;
-  border-style: solid;
   justify-content: center;
   flex-direction: column;
   margin: 1px;
@@ -273,8 +272,8 @@ body > * {
 
 .FeedbackText {
   display: flex;
-  border-style: solid;
   flex-grow: 3;
+  flex-direction: row;
   margin: 1px;
   width: 450px;
 }

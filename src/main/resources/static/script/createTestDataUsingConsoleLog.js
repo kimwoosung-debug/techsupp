@@ -176,7 +176,7 @@ function insertfeedbackimaget() {
       result += string;
       result += "'" + i + "'), "
     }
-  let poi = "insert into feedback_image (img_name, img_origin_img_name, img_url, rep_img, feedback_id, id) values ";
+  let poi = "insert into feedback_image (img_name, origin_img_name, img_url, rep_img, feedback_id, id) values ";
   poi += result;
   console.log(poi);
 }
@@ -284,7 +284,7 @@ function createTestPaylog() {
     payid = 0;
     statata = 0;
   }
-  let poi = "insert into user (user_email, payment_id, paylod_status) values "
+  let poi = "insert into paylog (user_email, payment_id, paylog_status) values "
   poi += result;
   console.log(poi);
 }

@@ -110,5 +110,4 @@ public class AdminController {
         model.addAttribute("result", adminProductService.paymentList(pageRequestDTO));
         return "admin/Payment/paymentlist";
     }
-
 }

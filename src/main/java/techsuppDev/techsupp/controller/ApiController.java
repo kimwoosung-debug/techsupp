@@ -113,18 +113,22 @@ public class ApiController {
             ArrayList paymentNumList = paymentService.getFivePaymentNumber(fiveProductNumber);
 
             JSONArray form = new JSONArray();
-
-            for(int i = 0; i < fiveProduct.size(); i++) {
+            if(paymentNumList.size() == 0) {
+                for (int i = 0; i < fiveProduct.size(); i++) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("id", fiveProduct.get(i).getId());
+                    jsonObject.put("seqId", fiveProduct.get(i).getSeqId());
+                    jsonObject.put("productName", fiveProduct.get(i).getProductName());
+                    jsonObject.put("investPrice", fiveProduct.get(i).getInvestPrice());
+                    jsonObject.put("period", fiveProduct.get(i).getPeriod());
+                    jsonObject.put("totalPrice", fiveProduct.get(i).getTotalPrice());
+                    jsonObject.put("paymentValue", paymentNumList.get(i));
+                    jsonObject.put("imgUrl", fiveProduct.get(i).getImgUrl());
+                    jsonObject.put("wishId", userId);
+                    form.add(jsonObject);
+                }
+            } else {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id", fiveProduct.get(i).getId());
-                jsonObject.put("seqId", fiveProduct.get(i).getSeqId());
-                jsonObject.put("productName", fiveProduct.get(i).getProductName());
-                jsonObject.put("investPrice", fiveProduct.get(i).getInvestPrice());
-                jsonObject.put("period", fiveProduct.get(i).getPeriod());
-                jsonObject.put("totalPrice", fiveProduct.get(i).getTotalPrice());
-                jsonObject.put("paymentValue", paymentNumList.get(i));
-                jsonObject.put("imgUrl", fiveProduct.get(i).getImgUrl());
-                jsonObject.put("wishId", userId);
                 form.add(jsonObject);
             }
 
@@ -307,7 +311,6 @@ public ResponseEntity wishDelete( HttpServletRequest req) {
         insertPaylog.setUserEmail(userEmail);
         insertPaylog.setPaymentId(savedPayment);
         insertPaylog.setPaylogStatus(PaylogStatus.PAY);
-
         paymentService.savePaylog(insertPaylog);
     }
 
@@ -367,7 +370,7 @@ public ResponseEntity wishDelete( HttpServletRequest req) {
             fileDir.mkdir();
         }
         String originalFileName = files.getOriginalFilename();
-        String saveFileName = "feedback_" + System.currentTimeMillis() + "_" +originalFileName;
+        String saveFileName = "feedback_" + System.currentTimeMillis();
         File saveFile = new File(downPath, saveFileName);
         files.transferTo(saveFile);
 

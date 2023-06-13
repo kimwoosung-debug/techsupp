@@ -169,12 +169,12 @@ public Object ProductCount(int pagingNumber, String keyword) {
             "product_name like '%" + keyword + "%' " +
             "limit " + pagingNumber + ", 50)as searchData)as pagecountkeyword;";
 
+
     if (keyword.equals("null") || keyword.equals("")) {
         resultSql += noKeywordSql;
     } else {
         resultSql += keywordSql;
     }
-
     Query nativeQuery = em.createNativeQuery(resultSql);
     Object rowNum = nativeQuery.getSingleResult();
     return rowNum;
